@@ -15,3 +15,7 @@ extensionFunc() {
     echo $LOCAL_VARIABLE
   }
 }
+
+: "${FILE_PATH:="/default/file"}"
+
+printf 'Printing %s\n' "$FILE_PATH"

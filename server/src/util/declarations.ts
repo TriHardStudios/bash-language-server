@@ -58,6 +58,23 @@ export function getGlobalDeclarations({
         const word = symbol.name
         globalDeclarations[word] = symbol
       }
+    } else if (node.type === 'command' && node.text.startsWith(': ')) {
+      const variableNode = node.namedChildren
+        .find((c) => c.type === 'string')
+        ?.namedChildren.find((c) => c.type === 'expansion')
+        ?.namedChildren.find((c) => c.type === 'variable_name')
+
+      if (variableNode) {
+        const symbol = LSP.SymbolInformation.create(
+          variableNode.text,
+          LSP.SymbolKind.Variable,
+          TreeSitterUtil.range(variableNode),
+          uri,
+        )
+        if (!globalDeclarations[symbol.name]) {
+          globalDeclarations[symbol.name] = symbol
+        }
+      }
     }
   })
 
